@@ -1,0 +1,111 @@
+.fpd-pricing-container {
+    margin-top: 20px;
+}
+.fpd-pricing-header {
+    position: sticky;
+    top: 40px;
+    background-color: rgba(0, 0, 0, .8);
+    padding: 15px;
+}
+.fpd-pricing-header h2 {
+    color: #fff;
+}
+.pricing-group {
+    border: 1px solid #ddd;
+    padding: 0 15px;
+    margin-bottom: 15px;
+    background: #fff;
+}
+
+.group-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.group-header h3 {
+    margin: 0.5em 0;
+}
+.group-actions {
+    display: flex;
+    gap: 5px;
+}
+.delete-group {
+    color: #d63638;
+    border-color: #d63638;
+}
+
+.delete-group:hover {
+    background: #d63638;
+    color: white;
+}
+.fpd-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.fpd-modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 800px;
+}
+
+.fpd-modal-close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.rule-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.rule-item select,
+.rule-item input {
+    flex: 1;
+}
+/* Ẩn elements selector */
+#elements-selector {
+    display: none;
+}
+
+/* assets/css/admin.css */
+.pricing-group.temporary-item {
+    border-left: 4px solid #ffb900;
+    background-color: #fff8e5;
+}
+
+.temp-badge {
+    font-size: 0.8em;
+    color: #d63638;
+    font-weight: normal;
+}
+
+.remove-temp-group {
+    color: #d63638;
+    border-color: #d63638;
+}
