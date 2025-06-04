@@ -25,7 +25,12 @@
 
 .group-header h3 {
     margin: 0.5em 0;
+    flex: 1 0 100px;
 }
+.group-header div {
+    flex: 1 0 100px;
+}
+
 .group-actions {
     display: flex;
     gap: 5px;
@@ -39,6 +44,7 @@
     background: #d63638;
     color: white;
 }
+/* Modal */
 .fpd-modal {
     display: none;
     position: fixed;
@@ -47,7 +53,8 @@
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.7);
+    overflow-y: auto;
 }
 
 .fpd-modal-content {
@@ -57,14 +64,67 @@
     border: 1px solid #888;
     width: 80%;
     max-width: 800px;
+    position: relative;
+    animation: modalopen 0.3s;
+}
+
+@keyframes modalopen {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .fpd-modal-close {
+    position: absolute;
+    right: 20px;
+    top: 10px;
     color: #aaa;
-    float: right;
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
+}
+
+.fpd-modal-close:hover {
+    color: #333;
+}
+
+/* Images grid trong modal */
+#images-list {
+    max-height: 60vh;
+    overflow-y: auto;
+    margin: 15px 0;
+    padding: 10px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+}
+
+.image-item {
+    padding: 10px;
+    border: 1px solid #eee;
+    background: white;
+    text-align: center;
+}
+
+.image-item label {
+    cursor: pointer;
+    display: block;
+}
+
+.image-item img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 5px;
+}
+
+/* Nút confirm */
+#confirm-images-selection {
+    margin-top: 15px;
 }
 
 .form-group {
@@ -108,4 +168,177 @@
 .remove-temp-group {
     color: #d63638;
     border-color: #d63638;
+}
+
+/* Thêm style cho tab */
+.nav-tab-wrapper {
+    margin: 20px 0 15px;
+}
+
+.tab-content {
+    display: none;
+    padding: 20px 0;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+#images-list-container {
+    display: flex;
+    justify-content: flex-start;
+    gap: 40px;
+}
+
+/* Style cho image selection */
+.image-item {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.image-item label {
+    cursor: pointer;
+    display: block;
+}
+
+.image-item img {
+    margin-bottom: 5px;
+}
+
+#selected-images-list {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
+#selected-images-list div {
+    padding: 5px;
+    border-bottom: 1px solid #eee;
+}
+
+#save-category-groups {
+    margin:30px 0;
+}
+
+/* Category filter */
+.category-filter {
+    margin: 15px 0;
+    padding: 10px;
+    background: #f5f5f5;
+}
+
+.category-filter-item {
+    margin: 0 10px;
+    padding: 5px 10px;
+    text-decoration: none;
+    border-radius: 3px;
+}
+
+.category-filter-item.active,
+.category-filter-item:hover {
+    background: #2271b1;
+    color: white;
+}
+
+.group-meta {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 5px;
+}
+
+.group-category {
+    display: inline-block;
+    padding: 2px 5px;
+    background: #f0f0f0;
+    border-radius: 3px;
+}
+/* Đảm bảo tab content hiển thị đúng */
+#existing-groups {
+    display: block;
+}
+
+/* Ẩn các tab content khác */
+.tab-content:not(#existing-groups) {
+    display: none;
+}
+
+/* Style cho loading state */
+.loading-content {
+    position: relative;
+    min-height: 100px;
+}
+
+.loading-content:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+/* Loading screen */
+#fpd-loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 99999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.fpd-loading-content {
+    background: white;
+    padding: 30px;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.fpd-loading-spinner {
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.fpd-loading-text {
+    font-size: 16px;
+    color: #333;
 }
