@@ -42,11 +42,34 @@ class FPDPricingManager
         );
 
         // JS
-        wp_enqueue_script(
-            'fpd-pricing-admin',
-            FPD_PRICING_MANAGER_URL . 'assets/js/admin.js',
+        // Đăng ký các script module
+        wp_register_script(
+            'fpd-utils',
+            plugins_url('assets/js/admin/utils.js', __FILE__),
             array('jquery'),
-            filemtime(FPD_PRICING_MANAGER_PATH . 'assets/js/admin.js'),
+            filemtime(plugin_dir_path(__FILE__) . 'assets/js/admin/utils.js'),
+            true
+        );
+
+        wp_register_script(
+            'fpd-group-manager',
+            plugins_url('assets/js/admin/modules/group-manager.js', __FILE__),
+            array('jquery'),
+            filemtime(plugin_dir_path(__FILE__) . 'assets/js/admin/modules/group-manager.js'),
+            true
+        );
+        wp_register_script(
+            'fpd-category-manager',
+            plugins_url('assets/js/admin/modules/category-manager.js', __FILE__),
+            array('jquery'),
+            filemtime(plugin_dir_path(__FILE__) . 'assets/js/admin/modules/category-manager.js'),
+            true
+        );
+        wp_register_script(
+            'fpd-modal-handler',
+            plugins_url('assets/js/admin/modules/modal-handler.js', __FILE__),
+            array('jquery'),
+            filemtime(plugin_dir_path(__FILE__) . 'assets/js/admin/modules/modal-handler.js'),
             true
         );
 
