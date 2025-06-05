@@ -286,7 +286,7 @@ class FPDPricingManager
                     'property' => 'imageSizeScaled',
                     'target' => [
                         'views' => -1,
-                        'elements' => '#' . sanitize_title($image['title'])
+                        'elements' => '#' . $image['title']
                     ],
                     'type' => 'any',
                     'rules' => $rules

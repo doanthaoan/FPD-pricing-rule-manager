@@ -256,7 +256,7 @@ jQuery(document).ready(function ($) {
                     window.groupsToDelete = [];
                     hasUnsavedChanges = false;
                     alert("Groups saved successfully");
-                    refreshGroupsList()
+                    window.location.reload();
                     hideLoading();
                 } else {
                     alert("Error saving groups: " + response.data);
