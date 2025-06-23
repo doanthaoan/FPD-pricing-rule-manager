@@ -3,15 +3,15 @@
 /**
  * Plugin Name: FPD Pricing Manager
  * Description: Manage FPD pricing groups
- * Version: 1.2
- * Author: Neotiq HN
+ * Version: 1.2.1
+ * Author: Neotiq
  * Text Domain: fpd-pricing-manager
  */
 
 defined('ABSPATH') || exit;
 
 // Define plugin constants
-define('FPD_PRICING_MANAGER_VERSION', '1.0');
+define('FPD_PRICING_MANAGER_VERSION', '1.2.1');
 define('FPD_PRICING_MANAGER_PATH', plugin_dir_path(__FILE__));
 define('FPD_PRICING_MANAGER_URL', plugin_dir_url(__FILE__));
 define('FPD_PRICING_MANAGER_BASENAME', plugin_basename(__FILE__));

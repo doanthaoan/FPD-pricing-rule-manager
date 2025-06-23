@@ -101,8 +101,8 @@ class FPDPricingManager
         $pricing_groups = json_decode($data, true);
 
         // Debug log
-        error_log('FPD Pricing Data: ' . print_r($data, true));
-        error_log('Decoded Data: ' . print_r($pricing_groups, true));
+        // error_log('FPD Pricing Data: ' . print_r($data, true));
+        // error_log('Decoded Data: ' . print_r($pricing_groups, true));
 
         if (json_last_error() !== JSON_ERROR_NONE) {
             error_log('JSON Decode Error: ' . json_last_error_msg());
@@ -132,7 +132,12 @@ class FPDPricingManager
                     ]
                 ]
             ];
-            update_option($this->option_name, json_encode($pricing_groups, JSON_UNESCAPED_UNICODE));
+            $existing_option = get_option($this->option_name, false);
+            if ($existing_option === false || $existing_option === '[]' || empty(json_decode($existing_option, true))) {
+                // Chỉ lưu nếu không có dữ liệu nào trước đó
+                update_option($this->option_name, json_encode($pricing_groups, JSON_UNESCAPED_UNICODE));
+            }
+            // update_option($this->option_name, json_encode($pricing_groups, JSON_UNESCAPED_UNICODE));
         }
 
         // Lọc các group imageSizeScaled
@@ -235,7 +240,9 @@ class FPDPricingManager
         $category_id = intval($_POST['category_id']);
         $select_all = intval($_POST['select_all']) === 1;
         $rules = json_decode(stripslashes($_POST['rules']), true);
-
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            wp_send_json_error('Invalid rules JSON data');
+        }
         global $wpdb;
 
         // Lấy thông tin category
@@ -268,12 +275,16 @@ class FPDPricingManager
                         'title' => $design['title']
                     ];
                 }, $designs);
+            } else {
+                wp_send_json_error('Invalid designs data');
             }
         } else {
             // Lấy từ danh sách đã chọn
             $selected_images = json_decode(stripslashes($_POST['selected_images']), true);
             if (json_last_error() === JSON_ERROR_NONE) {
                 $images = $selected_images;
+            } else {
+                wp_send_json_error('Invalid selected images JSON data');
             }
         }
 
@@ -326,8 +337,14 @@ class FPDPricingManager
 
         // Nhóm các elements trùng lặp
         $elements_map = [];
-        foreach ($image_groups as $index => $group) {
+
+        // $pricing_groups isn't contain only imageSizeScaled groups
+        // After filter, the key may not start from 0 or the index may not be continuous
+        // initialize the index for image_groups
+        $index = 0;
+        foreach ($image_groups as $group) {
             $element = $group['data']['target']['elements'] ?? '';
+            // 
             if (!empty($element)) {
                 if (!isset($elements_map[$element])) {
                     $elements_map[$element] = [];
@@ -336,9 +353,10 @@ class FPDPricingManager
                     'name' => $group['name'],
                     'category' => $group['category'] ?? '',
                     'data' => $group['data'],
-                    'original_index' => $index - 1
+                    'original_index' => $index
                 ];
             }
+            $index++; // increment index for next group
         }
 
         // Lọc chỉ các elements có từ 2 groups trở lên

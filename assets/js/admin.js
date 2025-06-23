@@ -55,7 +55,6 @@ jQuery(document).ready(function ($) {
             console.error("Group data not found at index:", groupIndex);
             return;
         }
-        console.log(groupIndex);
 
         const groupData = fpdPricingData.imageGroups[groupIndex];
 
@@ -98,7 +97,6 @@ jQuery(document).ready(function ($) {
     $(document).on("click", ".edit-group", function () {
         const groupIndex = $(this).closest(".pricing-group").data("index");
         const groupData = fpdPricingData.imageGroups[groupIndex];
-        console.log(groupData);
         const elementName = groupData.data.target.elements.replace("#", "");
         const categoryName = groupData.category;
         const modalTitle = "Edit Group: " + groupData.name;
@@ -150,7 +148,7 @@ jQuery(document).ready(function ($) {
         if (!elements.startsWith("#")) {
             elements = "#" + elements;
         }
-        groupName = "Motif - " + elementName;
+        let groupName = "Motif - " + elementName;
         // Loại bỏ ký tự đặc biệt không hợp lệ trong selector
         // elements = elements.replace(/[^a-zA-Z0-9-_#]/g, '');
         const categoryName = $("#category-name").val().trim();
@@ -593,6 +591,7 @@ jQuery(document).ready(function ($) {
 
     function renderDuplicateGroups(groups) {
         const $container = jQuery('#duplicate-groups-list');
+        console.log("Duplicate:", groups);
         $container.empty();
 
         if (groups.length === 0) {
@@ -629,6 +628,7 @@ jQuery(document).ready(function ($) {
 
     // Hàm refresh danh sách groups
     function refreshGroupsList() {
+        // showLoading();
         const $container = $("#pricing-groups-list");
         $container.empty();
 
@@ -650,6 +650,7 @@ jQuery(document).ready(function ($) {
         if ($container.children().length === 0) {
             $container.append("<p>No pricing groups found.</p>");
         }
+        // hideLoading();
     }
     // Hàm tạo HTML cho một group
     function createGroupHtml(group, index, isTemp, action) {
@@ -667,7 +668,7 @@ jQuery(document).ready(function ($) {
                         <span class="group-category">Category: ${group.category || "Uncategorized"}</span>
                     </div>
                     <div class="group-details">
-                        <span class="group-element">Element:</> ${group.data.target.elements}</span>
+                        <span class="group-element">Element: ${group.data.target.elements}</span>
                     </div>
                     <div class="group-actions">${isTemp
                 ? ""
