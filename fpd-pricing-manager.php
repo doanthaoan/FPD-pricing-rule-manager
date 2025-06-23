@@ -3,7 +3,7 @@
 /**
  * Plugin Name: FPD Pricing Manager
  * Description: Manage FPD pricing groups
- * Version: 1.1
+ * Version: 1.2
  * Author: Neotiq HN
  * Text Domain: fpd-pricing-manager
  */

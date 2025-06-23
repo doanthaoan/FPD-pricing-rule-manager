@@ -98,6 +98,7 @@ jQuery(document).ready(function ($) {
     $(document).on("click", ".edit-group", function () {
         const groupIndex = $(this).closest(".pricing-group").data("index");
         const groupData = fpdPricingData.imageGroups[groupIndex];
+        console.log(groupData);
         const elementName = groupData.data.target.elements.replace("#", "");
         const categoryName = groupData.category;
         const modalTitle = "Edit Group: " + groupData.name;
@@ -126,7 +127,7 @@ jQuery(document).ready(function ($) {
     // Close modal
     $(".fpd-modal-close").click(function () {
         $("#group-modal").hide();
-        $("#image-modal").hide();
+        $("#images-modal").hide();
     });
 
     // Add rule in modal
@@ -218,14 +219,14 @@ jQuery(document).ready(function ($) {
 
         // Close modal and enable save button
         $("#group-modal").hide();
-        $("#save-all-groups").prop("disabled", false);
+        $("#save-all-groups, #save-all-duplicate-fix").prop("disabled", false);
     });
 
     // Save all groups to DB
-    $("#save-all-groups").click(function () {
+    $("#save-all-groups, #save-all-duplicate-fix").click(function () {
         showLoading();
         // Lấy dữ liệu hiện tại
-        $("#save-all-groups").prop("disabled", true);
+        $("#save-all-groups, #save-all-duplicate-fix").prop("disabled", true);
         let allGroups = [...fpdPricingData.imageGroups];
 
         // Xóa các group đã marked
@@ -285,7 +286,7 @@ jQuery(document).ready(function ($) {
             $("#pricing-groups-list").prepend(newGroupHtml);
         }
 
-        $("#save-all-groups").prop("disabled", false);
+        $("#save-all-groups, #save-all-duplicate-fix").prop("disabled", false);
     });
 
     function addRuleToModal(operator, width, height, price) {
@@ -560,7 +561,59 @@ jQuery(document).ready(function ($) {
         refreshGroupsList();
         // alert(`${newGroups.length} groups created successfully!`);
     });
+    // DUPLICATE ITEMS
+    // Thêm sự kiện khi click tab Duplicate Elements
+    jQuery(document).on('click', '.nav-tab-wrapper a[href="#duplicate-elements"]', function () {
+        loadDuplicateGroups();
+    });
 
+    function loadDuplicateGroups() {
+        const $container = jQuery('#duplicate-groups-list');
+        $container.html('<div class="loading-duplicates">Loading duplicate groups...</div>');
+
+        jQuery.ajax({
+            url: fpdPricing.ajaxurl,
+            type: 'POST',
+            data: {
+                action: 'fpd_get_duplicate_groups',
+                nonce: fpdPricing.nonce
+            },
+            success: function (response) {
+                if (response.success) {
+                    renderDuplicateGroups(response.data);
+                } else {
+                    $container.html('<div class="error">Error loading duplicate groups</div>');
+                }
+            },
+            error: function () {
+                $container.html('<div class="error">Error loading duplicate groups</div>');
+            }
+        });
+    }
+
+    function renderDuplicateGroups(groups) {
+        const $container = jQuery('#duplicate-groups-list');
+        $container.empty();
+
+        if (groups.length === 0) {
+            $container.html('<div class="no-duplicates">No duplicate elements found</div>');
+            return;
+        }
+
+        groups.forEach(groupSet => {
+            const groupHtml = `
+            <div class="duplicate-group-set">
+                <div class="duplicate-group-header">
+                    <span>Element: <code class="duplicate-group-element">${groupSet.element}</code></span>
+                    <span>${groupSet.groups.length} groups</span>
+                </div>
+                ${groupSet.groups.map(group => createGroupHtml(group, group.original_index, false)).join('')}
+            </div>
+        `;
+
+            $container.append(groupHtml);
+        });
+    }
     // HELPER
 
     function loadGroupsFromServer() {
@@ -606,6 +659,9 @@ jQuery(document).ready(function ($) {
         return `
             <div class="pricing-group ${tempClass}" data-index="${index}" data-category="${group.category || "Uncategorized"}">
                 <div class="group-header">
+                    <div class="group-number">
+                        <p>${!isTemp ? index + 1 : ""}</p>
+                    </div>
                     <h3>${group.name} ${tempBadge}</h3>
                     <div class="group-meta">
                         <span class="group-category">Category: ${group.category || "Uncategorized"}</span>

@@ -33,7 +33,9 @@
 .group-header div {
     flex: 1 0 100px;
 }
-
+.group-number {
+    max-width: 50px;
+}
 .group-actions {
     display: flex;
     gap: 5px;
@@ -346,4 +348,57 @@
 .fpd-loading-text {
     font-size: 16px;
     color: #333;
+}
+
+/* DUPLICATE ITEMS */
+/* Style cho tab Duplicate Elements */
+.duplicate-groups-container {
+    margin-top: 20px;
+}
+
+.duplicate-group-set {
+    border: 2px solid #ffb900;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    background-color: #fff8e5;
+}
+
+.duplicate-group-header {
+    background-color: #ffb900;
+    padding: 10px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.duplicate-group-element {
+    font-family: monospace;
+    background-color: #fff;
+    padding: 2px 5px;
+    border-radius: 3px;
+}
+
+.duplicate-group-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.duplicate-group-item {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.duplicate-group-item:last-child {
+    border-bottom: none;
+}
+
+.duplicate-group-item .group-actions {
+    margin-top: 10px;
+}
+
+.loading-duplicates {
+    text-align: center;
+    padding: 20px;
+    color: #666;
 }

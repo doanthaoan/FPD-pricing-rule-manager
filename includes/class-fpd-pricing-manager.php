@@ -15,6 +15,7 @@ class FPDPricingManager
         add_action('wp_ajax_fpd_get_category_images', array($this, 'get_category_images'));
         add_action('wp_ajax_fpd_create_category_groups', array($this, 'create_category_groups'));
         add_action('wp_ajax_fpd_get_pricing_groups', array($this, 'get_pricing_groups'));
+        add_action('wp_ajax_fpd_get_duplicate_groups', array($this, 'get_duplicate_groups'));
     }
 
     public function add_admin_menu()
@@ -304,5 +305,58 @@ class FPDPricingManager
         wp_send_json_success([
             'message' => sprintf('%d groups created successfully!', count($new_groups))
         ]);
+    }
+
+    public function get_duplicate_groups()
+    {
+        check_ajax_referer('fpd_pricing_nonce', 'nonce');
+
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error('Unauthorized');
+        }
+
+        $data = get_option($this->option_name, '[]');
+        $pricing_groups = json_decode($data, true);
+
+        // Lọc chỉ các group imageSizeScaled
+        $image_groups = array_filter($pricing_groups, function ($group) {
+            return isset($group['data']['property']) &&
+                $group['data']['property'] === 'imageSizeScaled';
+        });
+
+        // Nhóm các elements trùng lặp
+        $elements_map = [];
+        foreach ($image_groups as $index => $group) {
+            $element = $group['data']['target']['elements'] ?? '';
+            if (!empty($element)) {
+                if (!isset($elements_map[$element])) {
+                    $elements_map[$element] = [];
+                }
+                $elements_map[$element][] = [
+                    'name' => $group['name'],
+                    'category' => $group['category'] ?? '',
+                    'data' => $group['data'],
+                    'original_index' => $index - 1
+                ];
+            }
+        }
+
+        // Lọc chỉ các elements có từ 2 groups trở lên
+        $duplicate_groups = [];
+        foreach ($elements_map as $element => $groups) {
+            if (count($groups) > 1) {
+                $duplicate_groups[] = [
+                    'element' => $element,
+                    'groups' => $groups
+                ];
+            }
+        }
+
+        // Sắp xếp theo số lượng groups giảm dần
+        usort($duplicate_groups, function ($a, $b) {
+            return count($b['groups']) - count($a['groups']);
+        });
+
+        wp_send_json_success($duplicate_groups);
     }
 }
